@@ -21,35 +21,33 @@
 */
 #pragma once
 
-#include "base_scene.hpp"
-#include "player.hpp"
-#include "region_pager_lua.hpp"
+#include "sprite_sheet.hpp"
+#include "vector2.hpp"
 
-#include "lua.hpp"
+#include "SDL2/SDL.h"
 
-class ExampleScene : public BaseScene {
+class Player {
 public:
-	ExampleScene(lua_State* L);
-	~ExampleScene();
+	Player();
+	virtual ~Player();
 
-	void RenderFrame(SDL_Renderer* renderer) override;
+	void Update(double delta);
+	void DrawTo(SDL_Renderer*);
 
-private:
-	//frame phases
-	void FrameStart() override;
-	void Update() override;
-	void FrameEnd() override;
+	SpriteSheet* const GetSprite() { return &spriteSheet; }
 
-	//input events
-	void MouseMotion(SDL_MouseMotionEvent const& event) override;
-	void MouseButtonDown(SDL_MouseButtonEvent const& event) override;
-	void MouseButtonUp(SDL_MouseButtonEvent const& event) override;
-	void MouseWheel(SDL_MouseWheelEvent const& event) override;
-	void KeyDown(SDL_KeyboardEvent const& event) override;
-	void KeyUp(SDL_KeyboardEvent const& event) override;
+	double SetOriginX(double x) { origin.x = x; }
+	double SetOriginY(double y) { origin.y = y; }
+	double SetMotionX(double x) { motion.x = x; }
+	double SetMotionY(double y) { motion.y = y; }
 
-	//members
-	lua_State* luaState = nullptr;
-	RegionPagerLua regionPager;
-	Player player;
+	double GetOriginX() { return origin.x; }
+	double GetOriginY() { return origin.y; }
+	double GetMotionX() { return motion.x; }
+	double GetMotionY() { return motion.y; }
+
+protected:
+	SpriteSheet spriteSheet;
+	Vector2 origin = {0, 0};
+	Vector2 motion = {0, 0};
 };

@@ -1,13 +1,13 @@
 #include directories
-INCLUDES+=.
+INCLUDES+=. entities graphics map misc
 
 #libraries
 #the order of the $(LIBS) is important, at least for MinGW
-LIBS+=
+LIBS+=libcommon.a
 ifeq ($(OS),Windows_NT)
 	LIBS+=-lmingw32
 endif
-LIBS+=-lSDL2main -lSDL2
+LIBS+=-lSDL2main -lSDL2 -lSDL2_image -llua
 
 #flags
 CXXFLAGS+=-std=c++11 $(addprefix -I,$(INCLUDES))
@@ -29,6 +29,7 @@ OUT=$(addprefix $(OUTDIR)/,ssrpg)
 
 #targets
 all: $(OBJ) $(OUT)
+	$(MAKE) -C entities
 	$(MAKE) -C graphics
 	$(MAKE) -C map
 	$(CXX) $(CXXFLAGS) -o $(OUT) $(OBJ) $(LIBS)

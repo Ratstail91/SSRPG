@@ -19,37 +19,21 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
 */
-#pragma once
-
-#include "base_scene.hpp"
 #include "player.hpp"
-#include "region_pager_lua.hpp"
 
-#include "lua.hpp"
+Player::Player() {
+	//
+}
 
-class ExampleScene : public BaseScene {
-public:
-	ExampleScene(lua_State* L);
-	~ExampleScene();
+Player::~Player() {
+	//
+}
 
-	void RenderFrame(SDL_Renderer* renderer) override;
+void Player::Update(double delta) {
+	origin += motion * delta;
+	spriteSheet.Update(delta);
+}
 
-private:
-	//frame phases
-	void FrameStart() override;
-	void Update() override;
-	void FrameEnd() override;
-
-	//input events
-	void MouseMotion(SDL_MouseMotionEvent const& event) override;
-	void MouseButtonDown(SDL_MouseButtonEvent const& event) override;
-	void MouseButtonUp(SDL_MouseButtonEvent const& event) override;
-	void MouseWheel(SDL_MouseWheelEvent const& event) override;
-	void KeyDown(SDL_KeyboardEvent const& event) override;
-	void KeyUp(SDL_KeyboardEvent const& event) override;
-
-	//members
-	lua_State* luaState = nullptr;
-	RegionPagerLua regionPager;
-	Player player;
-};
+void Player::DrawTo(SDL_Renderer* renderer) {
+	spriteSheet.DrawTo(renderer, origin.x, origin.y);
+}

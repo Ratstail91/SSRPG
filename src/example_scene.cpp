@@ -21,8 +21,13 @@
 */
 #include "example_scene.hpp"
 
-ExampleScene::ExampleScene() {
-	//
+#include <iostream>
+
+ExampleScene::ExampleScene(lua_State* L) {
+	luaState = L;
+	regionPager.SetLuaState(luaState);
+
+	player.GetSprite()->Load(GetRenderer(), "rsc\\character1.png", 4, 4);
 }
 
 ExampleScene::~ExampleScene() {
@@ -38,7 +43,10 @@ void ExampleScene::FrameStart() {
 }
 
 void ExampleScene::Update() {
-	//
+	//framework is calibrated to 16 milliseconds per frame
+	player.Update(16);
+
+	std::cout << player.GetOriginX() << ", " << player.GetOriginY() << std::endl;
 }
 
 void ExampleScene::FrameEnd() {
@@ -46,7 +54,7 @@ void ExampleScene::FrameEnd() {
 }
 
 void ExampleScene::RenderFrame(SDL_Renderer* renderer) {
-	//
+	player.DrawTo(renderer);
 }
 
 //-------------------------
