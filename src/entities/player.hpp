@@ -26,14 +26,21 @@
 
 #include "SDL2/SDL.h"
 
+#include <cmath>
+
+//the speeds that the character moves
+constexpr double CHARACTER_WALKING_SPEED = 2.24;
+constexpr double CHARACTER_DIAGONAL = 1.0/sqrt(2.0);
+
 class Player {
 public:
 	Player();
 	virtual ~Player();
 
-	void Update(double delta);
+	void Update();
 	void DrawTo(SDL_Renderer*);
 
+	//accessors & mutators
 	SpriteSheet* const GetSprite() { return &spriteSheet; }
 
 	double SetOriginX(double x) { origin.x = x; }

@@ -44,7 +44,7 @@ void ExampleScene::FrameStart() {
 
 void ExampleScene::Update() {
 	//framework is calibrated to 16 milliseconds per frame
-	player.Update(16);
+	player.Update();
 
 	std::cout << player.GetOriginX() << ", " << player.GetOriginY() << std::endl;
 }
@@ -78,14 +78,47 @@ void ExampleScene::MouseWheel(SDL_MouseWheelEvent const& event) {
 }
 
 void ExampleScene::KeyDown(SDL_KeyboardEvent const& event) {
-	//preference as a default
 	switch(event.keysym.sym) {
+		//preference as a default
 		case SDLK_ESCAPE:
 			QuitEvent();
+		break;
+
+		case SDLK_w:
+			player.SetMotionY(std::max(-CHARACTER_WALKING_SPEED, player.GetMotionY() -CHARACTER_WALKING_SPEED));
+		break;
+
+		case SDLK_a:
+			player.SetMotionX(std::max(-CHARACTER_WALKING_SPEED, player.GetMotionX() -CHARACTER_WALKING_SPEED));
+		break;
+
+		case SDLK_s:
+			player.SetMotionY(std::min(CHARACTER_WALKING_SPEED, player.GetMotionY() +CHARACTER_WALKING_SPEED));
+		break;
+
+		case SDLK_d:
+			player.SetMotionX(std::min(CHARACTER_WALKING_SPEED, player.GetMotionX() +CHARACTER_WALKING_SPEED));
 		break;
 	}
 }
 
 void ExampleScene::KeyUp(SDL_KeyboardEvent const& event) {
-	//
+	//stop
+	switch(event.keysym.sym) {
+		case SDLK_w:
+			player.SetMotionY(std::min(0.0, player.GetMotionY() +CHARACTER_WALKING_SPEED));
+		break;
+
+		case SDLK_a:
+			player.SetMotionX(std::min(0.0, player.GetMotionX() +CHARACTER_WALKING_SPEED));
+		break;
+
+		case SDLK_s:
+			player.SetMotionY(std::max(0.0, player.GetMotionY() -CHARACTER_WALKING_SPEED));
+		break;
+
+		case SDLK_d:
+			player.SetMotionX(std::max(0.0, player.GetMotionX() -CHARACTER_WALKING_SPEED));
+		break;
+	}
 }

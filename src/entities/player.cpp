@@ -29,9 +29,9 @@ Player::~Player() {
 	//
 }
 
-void Player::Update(double delta) {
-	origin += motion * delta;
-	spriteSheet.Update(delta);
+void Player::Update() {
+	origin += motion;
+	spriteSheet.Update(.16);
 }
 
 void Player::DrawTo(SDL_Renderer* renderer) {
