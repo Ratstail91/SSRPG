@@ -31,9 +31,107 @@ Player::~Player() {
 
 void Player::Update() {
 	origin += motion;
-	spriteSheet.Update(.16);
+	spriteSheet.Update(.016);
 }
 
-void Player::DrawTo(SDL_Renderer* renderer) {
-	spriteSheet.DrawTo(renderer, origin.x, origin.y);
+void Player::DrawTo(SDL_Renderer* renderer, int camX, int camY) {
+	spriteSheet.DrawTo(renderer, origin.x - camX, origin.y - camY);
+}
+
+//-------------------------
+//movement controls
+//-------------------------
+
+void Player::PressUp() {
+	motion.y = std::max(-CHARACTER_WALKING_SPEED, motion.y - CHARACTER_WALKING_SPEED);
+	CorrectSprite();
+	CorrectMotion();
+}
+
+void Player::PressDown() {
+	motion.y = std::min(CHARACTER_WALKING_SPEED, motion.y + CHARACTER_WALKING_SPEED);
+	CorrectSprite();
+	CorrectMotion();
+}
+
+void Player::PressLeft() {
+	motion.x = std::max(-CHARACTER_WALKING_SPEED, motion.x - CHARACTER_WALKING_SPEED);
+	CorrectSprite();
+	CorrectMotion();
+}
+
+void Player::PressRight() {
+	motion.x = std::min(CHARACTER_WALKING_SPEED, motion.x + CHARACTER_WALKING_SPEED);
+	CorrectSprite();
+	CorrectMotion();
+}
+
+void Player::ReleaseUp() {
+	motion.y = std::min(0.0, motion.y + CHARACTER_WALKING_SPEED);
+	CorrectSprite();
+	CorrectMotion();
+}
+
+void Player::ReleaseDown() {
+	motion.y = std::max(0.0, motion.y - CHARACTER_WALKING_SPEED);
+	CorrectSprite();
+	CorrectMotion();
+}
+
+void Player::ReleaseLeft() {
+	motion.x = std::min(0.0, motion.x + CHARACTER_WALKING_SPEED);
+	CorrectSprite();
+	CorrectMotion();
+}
+
+void Player::ReleaseRight() {
+	motion.x = std::max(0.0, motion.x - CHARACTER_WALKING_SPEED);
+	CorrectSprite();
+	CorrectMotion();
+}
+
+void Player::CorrectSprite() {
+	//NOTE: This must correspond to the sprite sheet in use
+	if (motion.y > 0) {
+		spriteSheet.SetIndexY(0);
+	}
+	else if (motion.y < 0) {
+		spriteSheet.SetIndexY(1);
+	}
+	else if (motion.x > 0) {
+		spriteSheet.SetIndexY(3);
+	}
+	else if (motion.x < 0) {
+		spriteSheet.SetIndexY(2);
+	}
+
+	//animation
+	if (motion.x || motion.y) {
+		if (!spriteSheet.GetDelay()) {
+			spriteSheet.SetDelay(0.1);
+		}
+	}
+	else {
+		spriteSheet.SetDelay(0);
+		spriteSheet.SetIndexX(0);
+	}
+}
+
+void Player::CorrectMotion() {
+	//defensive book keeping code
+	if (motion.x < 0) {
+		motion.x = -CHARACTER_WALKING_SPEED;
+	}
+	if (motion.x > 0) {
+		motion.x = CHARACTER_WALKING_SPEED;
+	}
+	if (motion.y < 0) {
+		motion.y = -CHARACTER_WALKING_SPEED;
+	}
+	if (motion.y > 0) {
+		motion.y = CHARACTER_WALKING_SPEED;
+	}
+	if (motion.x && motion.y) {
+		motion *= CHARACTER_DIAGONAL;
+	}
 }

@@ -58,6 +58,7 @@ public:
 
 	double SetDelay(double d);
 	double GetDelay() const { return delay; }
+	double GetTick() const { return tick; }
 
 private:
 	Uint16 countX = 0, countY = 0, indexX = 0, indexY = 0;

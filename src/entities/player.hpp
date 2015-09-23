@@ -38,10 +38,24 @@ public:
 	virtual ~Player();
 
 	void Update();
-	void DrawTo(SDL_Renderer*);
+	void DrawTo(SDL_Renderer*, int camX, int camY);
+
+	//movement controls
+	void PressUp();
+	void PressDown();
+	void PressLeft();
+	void PressRight();
+
+	void ReleaseUp();
+	void ReleaseDown();
+	void ReleaseLeft();
+	void ReleaseRight();
 
 	//accessors & mutators
 	SpriteSheet* const GetSprite() { return &spriteSheet; }
+
+	Vector2 GetOrigin() { return origin; }
+	Vector2 GetMotion() { return motion; }
 
 	double SetOriginX(double x) { origin.x = x; }
 	double SetOriginY(double y) { origin.y = y; }
@@ -54,6 +68,9 @@ public:
 	double GetMotionY() { return motion.y; }
 
 protected:
+	void CorrectSprite();
+	void CorrectMotion();
+
 	SpriteSheet spriteSheet;
 	Vector2 origin = {0, 0};
 	Vector2 motion = {0, 0};

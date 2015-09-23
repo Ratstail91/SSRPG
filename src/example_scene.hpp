@@ -24,6 +24,7 @@
 #include "base_scene.hpp"
 #include "player.hpp"
 #include "region_pager_lua.hpp"
+#include "tile_sheet.hpp"
 
 #include "lua.hpp"
 
@@ -51,5 +52,13 @@ private:
 	//members
 	lua_State* luaState = nullptr;
 	RegionPagerLua regionPager;
+	TileSheet tileSheet;
+
+	struct {
+		int x = 0;
+		int y = 0;
+		double zoom = 1.0;
+	}camera;
+
 	Player player;
 };

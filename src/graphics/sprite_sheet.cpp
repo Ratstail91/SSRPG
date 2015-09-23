@@ -76,9 +76,11 @@ SpriteSheet& SpriteSheet::operator=(SpriteSheet&& rhs) {
 
 void SpriteSheet::Update(double delta) {
 	//if the delay has passed
-	if (delay && (tick += delta) >= delay) {
+	tick += delta;
+	if (delay != 0 && tick >= delay) {
 		//if the index is out of bounds
-		if (++indexX >= countX) {
+		indexX += 1;
+		if (indexX >= countX) {
 			indexX = 0;
 		}
 		tick = 0;
