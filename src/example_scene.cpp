@@ -25,6 +25,7 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 
 ExampleScene::ExampleScene(lua_State* L) {
 	luaState = L;
@@ -39,10 +40,20 @@ ExampleScene::ExampleScene(lua_State* L) {
 			regionPager.SetTile(i, j, 0, 50);
 		}
 	}
+
+	if (luaL_dofile(luaState, "scripts\\startup.lua")) {
+		std::ostringstream msg;
+		msg << "Failed to run scripts\\startup.lua; " << lua_tostring(luaState, -1);
+		throw(std::runtime_error(msg.str()));
+	}
 }
 
 ExampleScene::~ExampleScene() {
-	//
+	if (luaL_dofile(luaState, "scripts\\shutdown.lua")) {
+		std::ostringstream msg;
+		msg << "Failed to run scripts\\shutdown.lua; " << lua_tostring(luaState, -1);
+		throw(std::runtime_error(msg.str()));
+	}
 }
 
 //-------------------------
@@ -133,6 +144,22 @@ void ExampleScene::MouseWheel(SDL_MouseWheelEvent const& event) {
 }
 
 void ExampleScene::KeyDown(SDL_KeyboardEvent const& event) {
+	/* DOCS: hotkeys 1-9 call lua 
+	*/
+	//hotkeys (LCTRL is broken)
+	if (event.keysym.mod & KMOD_SHIFT|KMOD_CTRL) {
+		switch(event.keysym.sym) {
+			case SDLK_1:
+				//
+			break;
+
+			//...
+		}
+
+		//skip other checks
+		return;
+	}
+
 	switch(event.keysym.sym) {
 		//preference as a default
 		case SDLK_ESCAPE:
