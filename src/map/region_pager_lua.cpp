@@ -128,6 +128,7 @@ Region* RegionPagerLua::CreateRegion(int x, int y) {
 
 	//something to work on
 	Region tmpRegion(x, y);
+	//TODO: add x & y as parameters
 	lua_pushlightuserdata(lua, &tmpRegion);
 
 	//call the function, 1 arg, 0 return

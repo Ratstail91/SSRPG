@@ -31,6 +31,7 @@
 
 #include "region_api.hpp"
 #include "region_pager_api.hpp"
+#include "hash.hpp"
 
 #include "lua.hpp"
 
@@ -53,6 +54,7 @@ static const luaL_Reg loadedlibs[] = {
 static const luaL_Reg preloadedlibs[] = {
   {TORTUGA_REGION_API, openRegionAPI},
   {TORTUGA_REGION_PAGER_API, openRegionPagerAPI},
+  {HASH_API, openHashAPI},
   {NULL, NULL}
 };
 

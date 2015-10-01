@@ -27,6 +27,16 @@
 #include <sstream>
 #include <stdexcept>
 
+//utility functions
+static int dofile_ext(lua_State* L, const char* filename, void* arg1) {
+	int ret = luaL_loadfile(L, filename);
+	if (ret) return ret;
+	lua_pushlightuserdata(L, arg1);
+	ret |= lua_pcall(L, 1, LUA_MULTRET, 0);
+	return ret;
+}
+
+//method definitions
 ExampleScene::ExampleScene(lua_State* L) {
 	luaState = L;
 	regionPager.SetLuaState(luaState);
@@ -35,13 +45,13 @@ ExampleScene::ExampleScene(lua_State* L) {
 	player.GetSprite()->Load(GetRenderer(), "rsc\\character1.png", 4, 4);
 
 	//DEBUG: basic map data
-	for (int i = -20; i < 20; i++) {
-		for (int j = -20; j < 20; j++) {
-			regionPager.SetTile(i, j, 0, 50);
-		}
-	}
+//	for (int i = -20; i < 20; i++) {
+//		for (int j = -20; j < 20; j++) {
+//			regionPager.SetTile(i, j, 0, 50);
+//		}
+//	}
 
-	if (luaL_dofile(luaState, "scripts\\startup.lua")) {
+	if (dofile_ext(luaState, "scripts\\startup.lua", &regionPager)) {
 		std::ostringstream msg;
 		msg << "Failed to run scripts\\startup.lua; " << lua_tostring(luaState, -1);
 		throw(std::runtime_error(msg.str()));
@@ -49,7 +59,7 @@ ExampleScene::ExampleScene(lua_State* L) {
 }
 
 ExampleScene::~ExampleScene() {
-	if (luaL_dofile(luaState, "scripts\\shutdown.lua")) {
+	if (dofile_ext(luaState, "scripts\\shutdown.lua", &regionPager)) {
 		std::ostringstream msg;
 		msg << "Failed to run scripts\\shutdown.lua; " << lua_tostring(luaState, -1);
 		throw(std::runtime_error(msg.str()));
@@ -67,6 +77,16 @@ void ExampleScene::FrameStart() {
 void ExampleScene::Update() {
 	//framework is calibrated to 16 milliseconds per frame
 	player.Update();
+
+	//DEBUG: pull the nearest regions into existance
+	int x = player.GetOriginX() / 32; //32 = tileWidth
+	int y = player.GetOriginY() / 32; //32 = tileHeight
+
+	for (int i = x - 100; i < x + 100; i += REGION_WIDTH) {
+		for (int j = y - 100; j < y + 100; j += REGION_HEIGHT) {
+			regionPager.GetRegion(snapToBase(REGION_WIDTH, i), snapToBase(REGION_HEIGHT, j));
+		}
+	}
 
 	//DEBUG: output: (player.x, player.y) (camera.x, camera.y)
 //	std::ostringstream os;
@@ -140,20 +160,36 @@ void ExampleScene::MouseButtonUp(SDL_MouseButtonEvent const& event) {
 }
 
 void ExampleScene::MouseWheel(SDL_MouseWheelEvent const& event) {
-	//
+	if (event.y < 0) camera.zoom *= 1.1;
+	if (event.y > 0) camera.zoom /= 1.1;
+
+	if (camera.zoom < 0.25) camera.zoom = 0.25;
+	if (camera.zoom > 2.0) camera.zoom = 2.0;
 }
 
 void ExampleScene::KeyDown(SDL_KeyboardEvent const& event) {
-	/* DOCS: hotkeys 1-9 call lua 
-	*/
 	//hotkeys (LCTRL is broken)
-	if (event.keysym.mod & KMOD_SHIFT|KMOD_CTRL) {
+	if (event.keysym.mod & (KMOD_SHIFT|KMOD_CTRL) && !event.repeat) {
 		switch(event.keysym.sym) {
 			case SDLK_1:
-				//
+				dofile_ext(luaState, "scripts\\hotkey_1.lua", &regionPager);
 			break;
 
-			//...
+			case SDLK_2:
+				dofile_ext(luaState, "scripts\\hotkey_2.lua", &regionPager);
+			break;
+
+			case SDLK_3:
+				dofile_ext(luaState, "scripts\\hotkey_3.lua", &regionPager);
+			break;
+
+			case SDLK_4:
+				dofile_ext(luaState, "scripts\\hotkey_4.lua", &regionPager);
+			break;
+
+			case SDLK_5:
+				dofile_ext(luaState, "scripts\\hotkey_5.lua", &regionPager);
+			break;
 		}
 
 		//skip other checks
