@@ -67,6 +67,23 @@ void Application::Init(int argc, char* argv[]) {
 	}
 
 	luaL_openlibs(luaState);
+
+	//-------------------------
+	//append 'scripts/'' to the module path
+	//-------------------------
+
+	//get the original path
+	lua_getglobal(luaState, "package");
+	lua_getfield(luaState, -1, "path");
+
+	//build & push the message
+	std::ostringstream path;
+	path << lua_tostring(luaState, -1) << ";scripts\\?.lua";
+	lua_pushstring(luaState, path.str().c_str());
+
+	//set the new path and clean up the stack
+	lua_setfield(luaState, -3, "path");
+	lua_pop(luaState, 2);
 }
 
 void Application::Proc() {
