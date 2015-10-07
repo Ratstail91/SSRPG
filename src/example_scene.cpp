@@ -87,39 +87,6 @@ void ExampleScene::Update() {
 			regionPager.GetRegion(snapToBase(REGION_WIDTH, i), snapToBase(REGION_HEIGHT, j));
 		}
 	}
-
-	//DEBUG: output: (player.x, player.y) (camera.x, camera.y)
-//	std::ostringstream os;
-
-	//(player.x, player.y)
-//	os << "(" << player.GetOriginX() << ", " << player.GetOriginY() << ")";
-//	std::cout << std::left << std::setw(20) << os.str();
-//	os.str("");
-
-	//(player.x, player.y)
-//	os << "(" << camera.x << ", " << camera.y << ")" << std::endl;
-//	std::cout << std::left << std::setw(20) << os.str();
-//	os.str("");
-
-	//(player.sprite.delay, player.sprite.tick)
-//	os << "(" << player.GetSprite()->GetDelay() << ", " << player.GetSprite()->GetTick() << ")";
-//	std::cout << std::left << std::setw(15) << os.str();
-//	os.str("");
-
-//	os << "(" << player.GetSprite()->GetCountX() << ", " << player.GetSprite()->GetCountY() << ")";
-//	std::cout << std::left << std::setw(10) << os.str();
-//	os.str("");
-
-//	os << "(" << player.GetSprite()->GetIndexX() << ", " << player.GetSprite()->GetIndexY() << ")";
-//	std::cout << std::left << std::setw(10) << os.str();
-//	os.str("");
-
-	//speed
-//	os << "(" << player.GetMotion().Length() << ")";
-//	std::cout << std::left << std::setw(10) << os.str();
-//	os.str("");
-
-//	std::cout << std::endl;
 }
 
 void ExampleScene::FrameEnd() {

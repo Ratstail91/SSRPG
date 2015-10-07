@@ -55,6 +55,7 @@ private:
 	TileSheet tileSheet;
 
 	struct {
+		//TODO: (0) better camera system
 		int x = 0;
 		int y = 0;
 		double zoom = 1.0;
