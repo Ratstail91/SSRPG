@@ -26,8 +26,8 @@ pagerlibs.SetOnCreate(pager, function(region)
 	--lambda definition
 	for i = 1, regionlibs.GetWidth(region) do
 		for j = 1, regionlibs.GetHeight(region) do
-			local t = math.ceil(smoothlibs.bilinear(x1, x2, y1, y2, q11, q12, q21, q22, i, j))
-			regionlibs.SetTile(region, i, j, 1, t * 36 + 14) 
+			local t = math.floor(smoothlibs.bilinear(x1, x2, y1, y2, q11, q12, q21, q22, i, j))
+			regionlibs.SetTile(region, i, j, 1, t * 3 + 18)
 		end
 	end
 

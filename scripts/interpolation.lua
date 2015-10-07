@@ -4,30 +4,24 @@ local libs = {}
 args:
 	x1, x2, y1, y2		; positions used to find qAB with f(x, y)
 	q11, q12, q21, q22	; f(xA, yB) = qAB
-	i, j 				; find the value of f(i, j)
+	i, j 				; tile indicies, relative to the region object
 return:
 	f(i, j)
 notes:
 	http://supercomputingblog.com/graphics/coding-bilinear-interpolation/
+	IMPORTANT! the values of the x & y parameters are in a different domain space than i & j
 --]]
 function libs.bilinear(x1, x2, y1, y2, q11, q12, q21, q22, i, j)
+	--determine the size of the area
+	local w = (x2 - x1)
+	local h = (y2 - y1)
+
 	--X axis
-	local R1 = ((x2 - i)/(x2 - x1)) * q11 + (i - x1)/(x2 - x1) * q21
-	local R2 = ((x2 - i)/(x2 - x1)) * q12 + (i - x1)/(x2 - x1) * q22
+	local R1 = math.abs((w - i)/w) * q11 + math.abs(i/w) * q21
+	local R2 = math.abs((w - i)/w) * q12 + math.abs(i/w) * q22
 
 	--y axis
-	local P = ((y2 - j)/(y2 - y1)) * R1 + ((j - y1)/(y2 - y1)) * R2
-
-	return P
-end
-
-function libs.alt(x1, x2, y1, y2, q11, q12, q21, q22, i, j)
-	--X axis
-	local R1 = ((i - x1)/(x2 - x1)) * q11 + (x2 - i)/(x2 - x1) * q21
-	local R2 = ((i - x1)/(x2 - x1)) * q12 + (x2 - i)/(x2 - x1) * q22
-
-	--y axis
-	local P = ((j - y1)/(y2 - y1)) * R1 + ((y2 - j)/(y2 - y1)) * R2
+	local P = math.abs((h - j)/h) * R1 + math.abs(j/h) * R2
 
 	return P
 end

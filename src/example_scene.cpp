@@ -40,7 +40,7 @@ static int dofile_ext(lua_State* L, const char* filename, void* arg1) {
 ExampleScene::ExampleScene(lua_State* L) {
 	luaState = L;
 	regionPager.SetLuaState(luaState);
-	tileSheet.Load(GetRenderer(), "rsc\\terrain.png", 32, 32);
+	tileSheet.Load(GetRenderer(), "rsc\\overworld.png", 32, 32);
 
 	player.GetSprite()->Load(GetRenderer(), "rsc\\character1.png", 4, 4);
 
