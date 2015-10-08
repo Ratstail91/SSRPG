@@ -169,6 +169,11 @@ void ExampleScene::KeyDown(SDL_KeyboardEvent const& event) {
 			QuitEvent();
 		break;
 
+		case SDLK_SPACE:
+			camera.zoom = 1.0;
+		break;
+
+		//character movement
 		case SDLK_w:
 			player.PressUp();
 		break;
