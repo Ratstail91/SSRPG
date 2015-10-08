@@ -194,15 +194,21 @@ void Application::ProcessEvents() {
 
 //Add the custom scene headers here
 #include "example_scene.hpp"
+#include "map_scene.hpp"
 
 void Application::ProcessSceneSignal(SceneSignal signal) {
 	ClearScene();
 
 	switch(signal) {
-		case SceneSignal::FIRST:
 		case SceneSignal::EXAMPLE_SCENE:
 			activeScene = new ExampleScene(luaState);
 		break;
+
+		case SceneSignal::FIRST:
+		case SceneSignal::MAP_SCENE:
+			activeScene = new MapScene(luaState);
+		break;
+
 		default: {
 			std::ostringstream msg;
 			msg << "Failed to recognize the scene signal: " << signal;

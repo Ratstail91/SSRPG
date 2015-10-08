@@ -1,6 +1,8 @@
 local libs = {}
 
+local pagerlibs = require("region_pager")
 local regionlibs = require("region")
+local hashlibs = require("hash")
 
 --utility functions
 function libs.Sqr(x)
@@ -51,6 +53,29 @@ function libs.bilinearInterpolation(x1, x2, y1, y2, q11, q12, q21, q22, i, j)
 	local P = math.abs((h - j)/h) * R1 + math.abs(j/h) * R2
 
 	return P
+end
+
+function libs.generateRaw(r)
+--	print(regionlibs.GetX(r), regionlibs.GetY(r))
+	--get the coords; NOTE: this algorithm doesn't strictly require the region bounds
+	local x1 = regionlibs.GetX(r)
+	local x2 = regionlibs.GetX(r) + regionlibs.GetWidth(r)
+	local y1 = regionlibs.GetY(r)
+	local y2 = regionlibs.GetY(r) + regionlibs.GetHeight(r)
+
+	--get f(xAB, yAB), range is 0 to 4 inclusive
+	local q11 = math.fmod(hashlibs.coordhash(x1, y1, 1), 5)
+	local q12 = math.fmod(hashlibs.coordhash(x1, y2, 1), 5)
+	local q21 = math.fmod(hashlibs.coordhash(x2, y1, 1), 5)
+	local q22 = math.fmod(hashlibs.coordhash(x2, y2, 1), 5)
+
+	--define the tiles
+	for i = 1, regionlibs.GetWidth(r) do
+		for j = 1, regionlibs.GetHeight(r) do
+			local t = libs.bilinearInterpolation(x1, x2, y1, y2, q11, q12, q21, q22, i, j)
+			regionlibs.SetTile(r, i, j, 1, math.floor(t) * libs.margin + libs.base)
+		end
+	end
 end
 
 function libs.pruneRidges(r)

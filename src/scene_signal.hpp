@@ -28,5 +28,6 @@ enum SceneSignal {
 	FIRST = 1,
 
 	//custom scenes
-	EXAMPLE_SCENE
+	EXAMPLE_SCENE,
+	MAP_SCENE
 };
