@@ -45,21 +45,21 @@ MapScene::MapScene(lua_State* L) {
 	//initial state
 	luaState = L;
 	regionPager.SetLuaState(luaState);
-	tileSheet.Load(GetRenderer(), "rsc\\overworld.png", 32, 32);
+	tileSheet.Load(GetRenderer(), "rsc/overworld.png", 32, 32);
 
 	//run startup.lua
-	if (dofile_ext(luaState, "scripts\\startup.lua", &regionPager)) {
+	if (dofile_ext(luaState, "scripts/startup.lua", &regionPager)) {
 		std::ostringstream msg;
-		msg << "Failed to run scripts\\startup.lua; " << lua_tostring(luaState, -1);
+		msg << "Failed to run scripts/startup.lua; " << lua_tostring(luaState, -1);
 		throw(std::runtime_error(msg.str()));
 	}
 }
 
 MapScene::~MapScene() {
 	//run shutdown.lua
-	if (dofile_ext(luaState, "scripts\\shutdown.lua", &regionPager)) {
+	if (dofile_ext(luaState, "scripts/shutdown.lua", &regionPager)) {
 		std::ostringstream msg;
-		msg << "Failed to run scripts\\shutdown.lua; " << lua_tostring(luaState, -1);
+		msg << "Failed to run scripts/shutdown.lua; " << lua_tostring(luaState, -1);
 		throw(std::runtime_error(msg.str()));
 	}
 }
@@ -135,23 +135,23 @@ void MapScene::KeyDown(SDL_KeyboardEvent const& event) {
 	if (event.keysym.mod & (KMOD_SHIFT|KMOD_CTRL) && !event.repeat) {
 		switch(event.keysym.sym) {
 			case SDLK_1:
-				dofile_ext(luaState, "scripts\\hotkey_1.lua", &regionPager);
+				dofile_ext(luaState, "scripts/hotkey_1.lua", &regionPager);
 			break;
 
 			case SDLK_2:
-				dofile_ext(luaState, "scripts\\hotkey_2.lua", &regionPager);
+				dofile_ext(luaState, "scripts/hotkey_2.lua", &regionPager);
 			break;
 
 			case SDLK_3:
-				dofile_ext(luaState, "scripts\\hotkey_3.lua", &regionPager);
+				dofile_ext(luaState, "scripts/hotkey_3.lua", &regionPager);
 			break;
 
 			case SDLK_4:
-				dofile_ext(luaState, "scripts\\hotkey_4.lua", &regionPager);
+				dofile_ext(luaState, "scripts/hotkey_4.lua", &regionPager);
 			break;
 
 			case SDLK_5:
-				dofile_ext(luaState, "scripts\\hotkey_5.lua", &regionPager);
+				dofile_ext(luaState, "scripts/hotkey_5.lua", &regionPager);
 			break;
 		}
 

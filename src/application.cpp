@@ -78,7 +78,7 @@ void Application::Init(int argc, char* argv[]) {
 
 	//build & push the message
 	std::ostringstream path;
-	path << lua_tostring(luaState, -1) << ";scripts\\?.lua";
+	path << lua_tostring(luaState, -1) << ";scripts/?.lua";
 	lua_pushstring(luaState, path.str().c_str());
 
 	//set the new path and clean up the stack
