@@ -15,10 +15,10 @@ pagerlibs.SetOnCreate(pager, function(region)
 	toolslibs.generateRaw(region)
 
 	--prune the odd structures
-	toolslibs.pruneRidges(region)
+--	toolslibs.pruneRidges(region)
 
 	--smooth out the edges
-	toolslibs.smoothEdges(region)
+--	toolslibs.smoothEdges(region)
 end)
 
 pagerlibs.SetOnUnload(pager, function(region)
