@@ -23,9 +23,12 @@
 
 #include "base_scene.hpp"
 #include "region_pager_lua.hpp"
+#include "text_line.hpp"
 #include "tile_sheet.hpp"
 
 #include "lua.hpp"
+
+#include "SDL2/SDL_ttf.h"
 
 class MapScene : public BaseScene {
 public:
@@ -59,4 +62,6 @@ private:
 		int y = 0;
 		double zoom = 1.0;
 	}camera;
+
+	TTF_Font* font = nullptr;
 };

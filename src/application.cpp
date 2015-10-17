@@ -26,7 +26,10 @@
 #include <stdexcept>
 
 void Application::Init(int argc, char* argv[]) {
+	//-------------------------
 	//create and check the window
+	//-------------------------
+
 	window = SDL_CreateWindow(
 		"Example Caption",
 		SDL_WINDOWPOS_UNDEFINED,
@@ -41,7 +44,10 @@ void Application::Init(int argc, char* argv[]) {
 		throw(std::runtime_error(msg.str()));
 	}
 
+	//-------------------------
 	//create and check the renderer
+	//-------------------------
+
 	renderer = SDL_CreateRenderer(window, -1, 0);
 
 	if (!renderer) {
@@ -50,14 +56,30 @@ void Application::Init(int argc, char* argv[]) {
 		throw(std::runtime_error(msg.str()));
 	}
 
+	//-------------------------
 	//screen scaling
+	//-------------------------
+
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
 	SDL_RenderSetLogicalSize(renderer, screenWidth, screenHeight);
 
 	//set the hook for the renderer
 	BaseScene::SetRenderer(renderer);
 
+	//-------------------------
+	//setting up SDL2_ttf
+	//-------------------------
+
+	if (TTF_Init()) {
+		std::ostringstream msg;
+		msg << "Failed to initialize SDL_ttf 2.0: " << SDL_GetError();
+		throw(std::runtime_error(msg.str()));
+	}
+
+	//-------------------------
 	//create & check the lua state
+	//-------------------------
+
 	luaState = luaL_newstate();
 
 	if (!luaState) {
@@ -69,7 +91,7 @@ void Application::Init(int argc, char* argv[]) {
 	luaL_openlibs(luaState);
 
 	//-------------------------
-	//append 'scripts/'' to the module path
+	//append 'scripts/' to the module path
 	//-------------------------
 
 	//get the original path

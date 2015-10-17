@@ -53,6 +53,15 @@ MapScene::MapScene(lua_State* L) {
 		msg << "Failed to run scripts\\startup.lua; " << lua_tostring(luaState, -1);
 		throw(std::runtime_error(msg.str()));
 	}
+
+	font = TTF_OpenFont("C:/Windows/Fonts/arialbd.ttf", 12);
+
+	//check that the font loaded
+	if (!font) {
+		std::ostringstream msg;
+		msg << "Failed to load a font file; " << SDL_GetError();
+		throw(std::runtime_error(msg.str()));
+	}
 }
 
 MapScene::~MapScene() {
@@ -90,14 +99,20 @@ void MapScene::FrameEnd() {
 	//cull distant regions
 	regionPager.UnloadIf([&](Region const& r) -> bool {
 		//rough boundry for unloading
-		return (r.GetX() * tileSheet.GetTileW() - camera.x > screenWidth / camera.zoom) || (r.GetY() * tileSheet.GetTileH() - camera.y > screenHeight / camera.zoom);
+		return (r.GetX() * tileSheet.GetTileW() - camera.x > screenWidth / minZoom) || (r.GetY() * tileSheet.GetTileH() - camera.y > screenHeight / minZoom);
 	});
 }
 
 void MapScene::RenderFrame(SDL_Renderer* renderer) {
 	//draw the ground
 	std::for_each(regionPager.GetContainer()->begin(), regionPager.GetContainer()->end(), [&](Region& r) {
-		tileSheet.DrawRegionTo(GetRenderer(), &r, camera.x, camera.y, camera.zoom, camera.zoom);
+		tileSheet.DrawRegionTo(renderer, &r, camera.x, camera.y, camera.zoom, camera.zoom);
+
+		//quick and dirty
+		std::ostringstream msg;
+		msg << r.GetX() << ", " << r.GetY();
+		TextLine textLine(renderer, font, msg.str(), SDL_Color{255, 255, 255, 255});
+		textLine.DrawTo(renderer, (r.GetX() * tileSheet.GetTileW() - camera.x) * camera.zoom, (r.GetY() * tileSheet.GetTileH() - camera.y) * camera.zoom);
 	});
 }
 

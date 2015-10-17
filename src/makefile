@@ -7,7 +7,7 @@ LIBS+=libcommon.a
 ifeq ($(OS),Windows_NT)
 	LIBS+=-lmingw32
 endif
-LIBS+=-lSDL2main -lSDL2 -lSDL2_image -llua
+LIBS+=-lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -llua
 
 #flags
 CXXFLAGS+=-std=c++11 $(addprefix -I,$(INCLUDES))
